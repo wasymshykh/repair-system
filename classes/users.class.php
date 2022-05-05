@@ -20,7 +20,7 @@ class Users
     
     public function get_by ($col, $val)
     {
-        $q = "SELECT * FROM `{$this->table_name}` WHERE `$col` = :v";
+        $q = "SELECT * FROM `{$this->table_name}` JOIN `roles` ON `user_role_id` = `role_id` WHERE `$col` = :v";
         $s = $this->db->prepare($q);
         $s->bindParam(":v", $val);
         if (!$s->execute()) {
@@ -54,6 +54,31 @@ class Users
         return ['status' => true];
     }
 
+    public function logout ()
+    {
+        if (isset($_SESSION['logged'])) {
+            unset($_SESSION['logged']);
+        }
+    }
+
+    public function get_user_logs ($user_id, $limit = false)
+    {
+        $q = "SELECT * FROM `{$this->table_logs}` WHERE `ulog_user_id` = :u ORDER BY `ulog_id` DESC";
+
+        if ($limit !== false) {
+            $q .= " LIMIT $limit";
+        }
+
+        $s = $this->db->prepare($q);
+        $s->bindParam(":u", $user_id);
+        if (!$s->execute()) {
+            $failure = $this->class_name.'.get_user_logs - E.02: Failure';
+            $this->logs->create($this->class_name_lower, $failure, json_encode(['error' => $s->errorInfo(), 'param' => func_get_args()]));
+            return ['status' => false, 'data' => $failure];
+        }
+        
+        return ['status' => true, 'data' => $s->fetchAll()];
+    }
     
     public function update ($changes, $user_id)
     {
