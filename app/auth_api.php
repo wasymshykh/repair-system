@@ -6,16 +6,16 @@ if (isset($_SESSION['logged']) && !empty($_SESSION['logged'])) {
     $logged_user = $Users->get_by('user_id', $_SESSION['logged']);
     if (!$logged_user['status']) {
         $Users->logout();
-        message_move('error', 'Invalid login session', 'login.php');
+        end_response(403, 'Invalid login session', true);
     }
 
     $logged_user = $logged_user['data'];
 
     if ($logged_user['user_status'] != 'A') {
         $Users->logout();
-        message_move('error', 'Your account is inactive', 'login.php');
+        end_response(403, 'Your account is inactive', true);
     }
 
 } else {
-    message_move('error', 'Login to access the page', 'login.php');
+    end_response(403, 'Login to access the page', true);
 }

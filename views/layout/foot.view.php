@@ -34,6 +34,17 @@
     <script src="assets/plugins/global/plugins.bundle.js"></script>
     <script src="assets/js/scripts.bundle.js"></script>
     <!--end::Global Javascript Bundle-->
+
+	<?php if (isset($custom_footer_js) && !empty($custom_footer_js)): ?>
+		<?php foreach ($custom_footer_js as $js): ?>
+			<script src="<?=$js?>"></script>
+		<?php endforeach; ?>
+	<?php endif; ?>
+	
+	<?php if (isset($custom_footer_script) && !empty($custom_footer_script)): ?>
+		<?=$custom_footer_script?>
+	<?php endif; ?>	
+
     <!--end::Javascript-->
 </body>
 </html>

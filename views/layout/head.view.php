@@ -12,6 +12,12 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
     <!--end::Fonts-->
 
+	<?php if (isset($custom_head_css) && !empty($custom_head_css)): ?>
+		<?php foreach ($custom_head_css as $css): ?>
+			<link href="<?=$css?>" rel="stylesheet" type="text/css" />
+		<?php endforeach; ?>
+	<?php endif; ?>
+
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <?=css_link('assets/plugins/global/plugins.bundle', true)?>
     <?=css_link('assets/css/style.bundle', true)?>
@@ -147,6 +153,7 @@
 											Dashboards
 										</span>
                                     </a>
+									
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
 										<span class="menu-link py-3">
 											<span class="menu-title">Users</span>
@@ -223,12 +230,22 @@
 													</div>
 												</div>
 											</div>
-
 											
 										</div>
 									</div>
+
+									<a href="<?=href('types')?>" class="menu-item <?=isset($page_type) && $page_type=="types"?'here':''?> me-lg-1">
+										<span class="menu-link py-3">Types</span>
+                                    </a>
 								</div>
 								<!--end::Menu-->
+
+								<div class="d-flex align-items-stretch flex-shrink-0 p-4 p-lg-0 me-lg-2">
+									<div class="d-flex align-items-center">
+										<a href="<?=href('create_job')?>" class="btn btn-sm btn-primary">Create Job <i class="bi bi-arrow-right"></i></a>
+									</div>
+								</div>
+
                                 
 							</div>
 							<!--end::Menu wrapper-->
@@ -249,11 +266,13 @@
 							<div class="page-title d-flex flex-column me-3">
 								<!--begin::Title-->
 								<h1 class="d-flex text-dark fw-bolder my-1 fs-3"><?=$page_title??''?>
+								<?php if (!empty($page_description)): ?>
 								<!--begin::Separator-->
 								<span class="h-20px border-gray-400 border-start mx-3"></span>
 								<!--end::Separator-->
 								<!--begin::Description-->
 								<small class="text-gray-500 fs-7 fw-bold my-1"><?=$page_description??''?></small>
+								<?php endif; ?>
 								<!--end::Description--></h1>
 								<!--end::Title-->
 							</div>
