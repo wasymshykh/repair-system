@@ -2,7 +2,7 @@
 
 require_once 'app/start.php';
 
-require_once 'app/auth.php';
+require_once DIR.'app/auth.php';
 
 $logs = $Users->get_user_logs($logged_user['user_id'], 20);
 

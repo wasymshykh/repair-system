@@ -237,6 +237,10 @@
 									<a href="<?=href('types')?>" class="menu-item <?=isset($page_type) && $page_type=="types"?'here':''?> me-lg-1">
 										<span class="menu-link py-3">Types</span>
                                     </a>
+									
+									<a href="<?=href('manufacturers')?>" class="menu-item <?=isset($page_type) && $page_type=="manufacturers"?'here':''?> me-lg-1">
+										<span class="menu-link py-3">Manufacturers</span>
+                                    </a>
 								</div>
 								<!--end::Menu-->
 

@@ -4,17 +4,17 @@ require_once 'app/start.php';
 
 require_once DIR.'app/auth.php';
 
-$Types = new Types($db);
+$Manufacturers = new Manufacturers ($db);
 
-$types = $Types->get_all();
-if ($types['status']) {
-    $types = $types['data'];
+$manufacturers = $Manufacturers->get_all();
+if ($manufacturers['status']) {
+    $manufacturers = $manufacturers['data'];
 } else {
-    $types = [];
+    $manufacturers = [];
 }
 
-$page_title = "Types";
-$page_type = "types";
+$page_title = "Manufacturers";
+$page_type = "manufacturers";
 
 $custom_head_css = ['assets/plugins/custom/datatables/datatables.bundle.css'];
 
@@ -30,5 +30,5 @@ $custom_footer_script = '
 </script>';
 
 require_once DIR.'views/layout/head.view.php';
-require_once DIR.'views/types.view.php';
+require_once DIR.'views/manufacturers.view.php';
 require_once DIR.'views/layout/foot.view.php';

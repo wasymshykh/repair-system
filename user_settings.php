@@ -2,7 +2,7 @@
 
 require_once 'app/start.php';
 
-require_once 'app/auth.php';
+require_once DIR.'app/auth.php';
 
 if (isset($_POST) && !empty($_POST)) {
 
