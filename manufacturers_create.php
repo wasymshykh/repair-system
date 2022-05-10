@@ -2,7 +2,7 @@
 
 require_once 'app/start.php';
 
-require_once 'app/auth.php';
+require_once DIR.'app/auth.php';
 
 $Manufacturers = new Manufacturers ($db);
 

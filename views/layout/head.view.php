@@ -154,7 +154,7 @@
 										</span>
                                     </a>
 									
-									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-lg-1">
+									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion <?=isset($page_type) && $page_type=="users"?'here':''?> me-lg-1">
 										<span class="menu-link py-3">
 											<span class="menu-title">Users</span>
 											<span class="menu-arrow"></span>
@@ -213,7 +213,7 @@
 												</span>
 												<div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-active-bg py-lg-4 w-lg-225px">
 													<div class="menu-item">
-														<a class="menu-link py-3" href="<?=href('role_create')?>">
+														<a class="menu-link py-3" href="<?=href('roles_create')?>">
 															<span class="menu-bullet">
 																<span class="bullet bullet-dot"></span>
 															</span>
