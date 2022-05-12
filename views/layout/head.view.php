@@ -115,7 +115,7 @@
 										<!--end::Menu item-->
 										<!--begin::Menu item-->
 										<div class="menu-item px-5">
-											<a href="<?=href('user_settings')?>" class="menu-link px-5">Account Logs</a>
+											<a href="<?=href('user_logs')?>" class="menu-link px-5">Account Logs</a>
 										</div>
 										<!--end::Menu item-->
 
@@ -178,7 +178,7 @@
 												</span>
 												<div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-active-bg py-lg-4 w-lg-225px">
 													<div class="menu-item">
-														<a class="menu-link py-3" href="<?=href('user_create')?>">
+														<a class="menu-link py-3" href="<?=href('users_create')?>">
 															<span class="menu-bullet">
 																<span class="bullet bullet-dot"></span>
 															</span>
