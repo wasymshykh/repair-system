@@ -12,9 +12,13 @@
 
 <div class="card mb-10 d-print-none">
     <div class="card-body">
-        <div class="d-flex">
+        <div class="d-flex justify-content-between">
             <div>
                 <a href="<?=href('jobs')?>" class="btn btn-primary"><i class="bi bi-arrow-left"></i> Jobs</a>
+            </div>
+
+            <div>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modallogs">Job Logs</button>
             </div>
         </div>
     </div>
@@ -158,6 +162,8 @@
                                 <a href="<?=href('job_receipt.php?j='.$job['job_id'].'&print', false)?>" class="btn btn-sm btn-success py-1 px-2">print <i class="bi bi-arrow-right"></i></a>
                             </td>
                         </tr>
+
+                        <?php if ($job['job_status'] == 'GREEN' || $job['job_status'] == 'RED'): ?>
                         <tr>
                             <td class="text-muted">
                                 <div class="d-flex align-items-center">
@@ -176,6 +182,7 @@
                                 <a href="<?=href('job_invoice.php?j='.$job['job_id'].'&print', false)?>" class="btn btn-sm btn-success py-1 px-2">print <i class="bi bi-arrow-right"></i></a>
                             </td>
                         </tr>
+                        <?php endif; ?>
 
                     </tbody>
                 </table>
@@ -236,6 +243,28 @@
                                 </td>
                                 <td class="fw-bolder text-end"><?=$job['manufacturer_name']?></td>
                             </tr>
+
+                            <?php if ($job['job_status'] == 'GREEN' || $job['job_status'] == 'RED'): ?>
+                                <tr>
+                                    <td class="text-muted">
+                                        <div class="d-flex align-items-center">
+                                        <!--begin::Svg Icon | path: icons/duotune/files/fil002.svg-->
+                                        <span class="svg-icon svg-icon-2 me-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+                                                <path opacity="0.3" d="M19 3.40002C18.4 3.40002 18 3.80002 18 4.40002V8.40002H14V4.40002C14 3.80002 13.6 3.40002 13 3.40002C12.4 3.40002 12 3.80002 12 4.40002V8.40002H8V4.40002C8 3.80002 7.6 3.40002 7 3.40002C6.4 3.40002 6 3.80002 6 4.40002V8.40002H2V4.40002C2 3.80002 1.6 3.40002 1 3.40002C0.4 3.40002 0 3.80002 0 4.40002V19.4C0 20 0.4 20.4 1 20.4H19C19.6 20.4 20 20 20 19.4V4.40002C20 3.80002 19.6 3.40002 19 3.40002ZM18 10.4V13.4H14V10.4H18ZM12 10.4V13.4H8V10.4H12ZM12 15.4V18.4H8V15.4H12ZM6 10.4V13.4H2V10.4H6ZM2 15.4H6V18.4H2V15.4ZM14 18.4V15.4H18V18.4H14Z" fill="black"></path>
+                                                <path d="M19 0.400024H1C0.4 0.400024 0 0.800024 0 1.40002V4.40002C0 5.00002 0.4 5.40002 1 5.40002H19C19.6 5.40002 20 5.00002 20 4.40002V1.40002C20 0.800024 19.6 0.400024 19 0.400024Z" fill="black"></path>
+                                            </svg>
+                                        </span>Repaire Date</div>
+                                    </td>
+                                    <td class="fw-bolder text-end"><?=!empty($job['job_repair_date'])?normal_date($job['job_repair_date'], 'M d, Y'):'-'?></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="fw-bolder">Repair Note</div>
+                                        <div class="fs-7 text-muted"><?=$job['job_repair_description']?></div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -432,6 +461,33 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" name="change_status" class="btn btn-danger">Yes, confirm</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" id="modallogs" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <form method="POST" action="" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Job Logs</h5>
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="svg-icon svg-icon-2x">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor"/>
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor"/>
+                        </svg>
+                    </span>
+                </div>
+                <!--end::Close-->
+            </div>
+            <div class="modal-body">                
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
             </div>
         </form>
     </div>
