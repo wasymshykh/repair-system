@@ -7,6 +7,7 @@ class Jobs
     private $class_name;
     private $class_name_lower;
     private $table_name;
+    private $table_logs;
 
     public function __construct(PDO $db) {
         $this->logs = new Logs((new DB())->connect());
@@ -14,6 +15,7 @@ class Jobs
         $this->class_name = "Jobs";
         $this->class_name_lower = "jobs_class";
         $this->table_name = "jobs";
+        $this->table_logs = "job_logs";
     }
 
     public function insert_transaction ($manu_id, $type_id, $customer_name, $customer_email, $customer_phone, $item_name, $description, $price, $receiving_date, $status, $assigned_roles, $user_id, Users $Users)
@@ -104,6 +106,110 @@ class Jobs
         if ($s->rowCount() == 0) { return ['status' => false, 'data' => 'Not found']; }
 
         return ['status' => true, 'data' => $s->fetch()];
+    }
+
+    public function get_all_detailed_by ()
+    {
+        $q = "SELECT * FROM `{$this->table_name}` JOIN `manufacturers` ON `manufacturer_id` = `job_manufacturer_id` JOIN `item_types` ON `job_item_type_id` = `item_type_id`";
+        $s = $this->db->prepare($q);
+        $s->bindParam(":v", $val);
+        if (!$s->execute()) {
+            $failure = $this->class_name.'.get_all_detailed_by - E.02: Failure';
+            $this->logs->create($this->class_name_lower, $failure, json_encode(['error' => $s->errorInfo(), 'param' => func_get_args()]));
+            return ['status' => false, 'data' => $failure];
+        }
+
+        if ($s->rowCount() == 0) { return ['status' => false, 'data' => 'Not found']; }
+
+        return ['status' => true, 'data' => $s->fetchAll()];
+    }
+
+    public function mark_job_transaction ($changes, $current, $job_id, $user_id, Users $Users, $type = "Repair")
+    {
+        try {
+            $this->db->beginTransaction();
+
+            $dt = current_date();
+
+            $changes ['job_updated'] = $dt;
+
+            $this->update($changes, $job_id);
+
+            $text = "";
+            if (array_key_exists('job_repair_date', $changes)) {
+                $text .= "$type date is updated to '".normal_date($changes['job_repair_date'], 'M d, Y')."'. ";
+            }
+            if (array_key_exists('job_status', $changes)) {
+                $text .= "Job status is changed from ['".$current['job_status']."'] to ['".$changes['job_status']."']. ";
+            }
+            if (array_key_exists('job_repair_cost', $changes)) {
+                $text .= "$type cost is updated from '".$current['job_repair_cost']." CHK' to '".$changes['job_repair_cost']." CHR'. ";
+            }
+            if (array_key_exists('job_repair_description', $changes)) {
+                $text .= "$type description is updated to '".$changes['job_repair_description']."'. ";
+            }
+
+            $this->record_log($job_id, $user_id, 'REPAIRED', $text);
+
+            $Users->record_log($user_id, 'JOB_REPAIRED', 'At '.normal_date($dt).' user changed status of job [ID-"'.$job_id.'"] to repaired');
+
+            $this->db->commit();
+
+            return ['status' => true, 'data' => 'Transaction successful', 'job_id' => $job_id];
+
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            
+            $failure = $this->class_name.'.mark_job_transaction - E.10: Exception';
+            $this->logs->create($failure, json_encode(['error' => $e->getMessage(), 'exception' => $e, 'param' => func_get_args()]));
+            return ['status' => false, 'data' => 'Transaction failed'];
+        }
+
+    }
+
+    public function update ($changes, $job_id)
+    {
+        if (!empty($changes)) {
+            $vals = "";
+            foreach ($changes as $c => $v) {
+                if (!empty($vals)) {
+                    $vals .= ", ";
+                }
+                $vals .= "`$c`='$v'";
+            }
+            $q = "UPDATE `{$this->table_name}` SET $vals WHERE `job_id` = :ji";
+
+            $s = $this->db->prepare($q);
+            $s->bindParam(":ji", $job_id);
+            if (!$s->execute()) {
+                $failure = $this->class_name.'.update - E.02: Failure';
+                $this->logs->create($this->class_name_lower, $failure, json_encode(['data' => $s->errorInfo(), 'data' => ['changes' => $changes, 'job_id' => $job_id]]));
+                return ['status' => false, 'type' => 'query', 'data' => $failure];
+            }
+            
+        }
+
+        return ['status' => true, 'data' => "Updated successfully!"];
+    }
+
+    
+    public function record_log ($job_id, $user_id, $action, $text)
+    {
+        $q = "INSERT INTO `{$this->table_logs}` (`jlog_job_id`, `jlog_user_id`, `jlog_action`, `jlog_text`, `jlog_created`) VALUES (:ji, :ui, :ja, :tx, :dt)";
+        $s = $this->db->prepare($q);
+        $s->bindParam(":ji", $job_id);
+        $s->bindParam(":ui", $user_id);
+        $s->bindParam(":ja", $action);
+        $s->bindParam(":tx", $text);
+        $dt = current_date();
+        $s->bindParam(":dt", $dt);
+        if (!$s->execute()) {
+            $failure = $this->class_name.'.record_log - E.02: Failure';
+            $this->logs->create($this->class_name_lower, $failure, json_encode(['error' => $s->errorInfo(), 'param' => func_get_args()]));
+            return ['status' => false, 'data' => $failure];
+        }
+        
+        return ['status' => true];
     }
 
 }

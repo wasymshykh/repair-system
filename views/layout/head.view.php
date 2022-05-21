@@ -21,6 +21,7 @@
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <?=css_link('assets/plugins/global/plugins.bundle', true)?>
     <?=css_link('assets/css/style.bundle', true)?>
+    <?=css_link('assets/css/custom', true)?>
     <!--end::Global Stylesheets Bundle-->
 
 </head>
@@ -240,6 +241,10 @@
 									
 									<a href="<?=href('manufacturers')?>" class="menu-item <?=isset($page_type) && $page_type=="manufacturers"?'here':''?> me-lg-1">
 										<span class="menu-link py-3">Manufacturers</span>
+                                    </a>
+
+									<a href="<?=href('jobs')?>" class="menu-item <?=isset($page_type) && $page_type=="jobs"?'here':''?> me-lg-1">
+										<span class="menu-link py-3">Jobs</span>
                                     </a>
 								</div>
 								<!--end::Menu-->

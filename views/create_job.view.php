@@ -85,7 +85,7 @@
                 <label for="receiving_date" class="fs-7 fw-bolder form-label mb-1">
                     <span class="required">Receiving Date</span>
                 </label>
-                <input type="text" name="receiving_date" id="receiving_date" class="form-control form-control-sm form-control-solid" placeholder="Select a date" value="<?=$_POST['receiving_date']??''?>">
+                <input type="text" name="receiving_date" id="receiving_date" class="form-control form-control-sm form-control-solid" placeholder="Select a date" value="<?=$_POST['receiving_date']??current_date('Y-m-d')?>">
                 <?php if (isset($error_field['receiving_date'])): ?><div class="form-text text-danger"><?=$error_field['receiving_date']?></div><?php endif; ?>
             </div>
             
