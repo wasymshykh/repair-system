@@ -97,21 +97,17 @@ function __d ($v)
 }
 
 function job_status_to_badge ($status) {
+    if ($status === 'PINK') { return '<div class="badge badge-light-pink">waiting for diagnostics</div>'; }
+    if ($status === 'ORANGE') { return '<div class="badge badge-light-warning">waiting for parts</div>'; }
+    if ($status === 'RED') { return '<div class="badge badge-light-red">cannot be repaired</div>'; }
+    if ($status === 'GREEN') { return '<div class="badge badge-light-success">repaired</div>'; }
+    return '';
+}
 
-    if ($status === 'PINK') {
-        return '<div class="badge badge-light-pink">waiting for diagnostics</div>';
-    }
-    
-    if ($status === 'ORANGE') {
-        return '<div class="badge badge-light-warning">waiting for parts</div>';
-    }
-
-    if ($status === 'RED') {
-        return '<div class="badge badge-light-red">cannot be repaired</div>';
-    }
-
-    if ($status === 'GREEN') {
-        return '<div class="badge badge-light-success">repaired</div>';
-    }
-
+function job_status_to_text ($status) {
+    if ($status === 'PINK') { return 'waiting for diagnostics'; }
+    if ($status === 'ORANGE') { return 'waiting for parts'; }
+    if ($status === 'RED') { return 'cannot be repaired'; }
+    if ($status === 'GREEN') { return 'repaired'; }
+    return '';
 }

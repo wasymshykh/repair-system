@@ -181,5 +181,5 @@ $page_title = "Job Details";
 $page_type = "job";
 
 require_once DIR.'views/layout/head.view.php';
-require_once DIR.'views/job.view.php';
+require_once DIR.'views/jobs/job.view.php';
 require_once DIR.'views/layout/foot.view.php';

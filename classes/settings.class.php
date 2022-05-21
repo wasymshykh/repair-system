@@ -103,5 +103,25 @@ class Settings
 
         return ['status' => true];
     }
+
+    public function update_settings_multiple ($changes)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            foreach ($changes as $key => $val) {
+                $this->update_settings($key, $val);
+            }
+            
+            $this->db->commit();
+
+            return ['status' => true];
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $failure = $this->class_name.'.update_settings_multiple - E.10: Exception';
+            $this->logs->create($failure, json_encode(['error' => $e->getMessage(), 'exception' => $e, 'param' => func_get_args()]));
+            return ['status' => false, 'data' => 'Transaction failed'];
+        }
+    }
     
 }
