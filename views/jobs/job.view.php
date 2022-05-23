@@ -18,6 +18,7 @@
             </div>
 
             <div>
+                <a href="<?=href('job_edit.php?i='.$job['job_id'], false)?>" class="btn btn-primary"><i class="bi bi-pen"></i> Edit Job</a>
                 <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modallogs">Job Logs</button>
             </div>
         </div>

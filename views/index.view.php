@@ -35,7 +35,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($jobs as $i => $job): if ($i == 4) { break; } ?>
+                            <?php foreach ($jobs as $i => $job): if ($i == 5) { break; } ?>
                             <tr>
                                 <td>
                                     <div class="symbol symbol-50px me-2">

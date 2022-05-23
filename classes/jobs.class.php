@@ -189,6 +189,47 @@ class Jobs
 
     }
 
+    public function update_transaction ($changes, $assigned_roles, $job_id, $user_id, Users $Users)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            $dt = current_date();
+            $changes ['job_updated'] = $dt;
+            $this->update($changes, $job_id);
+
+            if (!empty($assigned_roles)) {
+                $this->delete_assigned_roles ($job_id);
+                $this->job_role_insert($assigned_roles, $job_id);
+            }
+
+            $Users->record_log($user_id, 'JOB_UPDATED', 'At '.normal_date($dt).' user changed job details [ID-"'.$job_id.'"].');
+            
+            $this->db->commit();
+
+            return ['status' => true, 'data' => 'Transaction successful'];
+
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            $failure = $this->class_name.'.update_transaction - E.10: Exception';
+            $this->logs->create($failure, json_encode(['error' => $e->getMessage(), 'exception' => $e, 'param' => func_get_args()]));
+            return ['status' => false, 'data' => 'Transaction failed'];
+        }
+    }
+
+    public function delete_assigned_roles ($job_id)
+    {
+        
+        $q = "DELETE FROM `job_roles` WHERE `job_roles_job_id` = :ji";
+        $s = $this->db->prepare($q);
+        if (!$s->execute([':ji' => $job_id])) {
+            $failure = $this->class_name.'.delete_assigned_roles - E.02: Failure';
+            $this->logs->create($this->class_name_lower, $failure, json_encode(['error' => $s->errorInfo(), 'param' => func_get_args()]));
+            return ['status' => false, 'data' => $failure];
+        }
+        return ['status' => true];
+    }
+
     public function update ($changes, $job_id)
     {
         if (!empty($changes)) {
@@ -212,6 +253,20 @@ class Jobs
         }
 
         return ['status' => true, 'data' => "Updated successfully!"];
+    }
+
+    public function get_job_roles_by_job_id ($job_id)
+    {
+        $q = "SELECT * FROM `job_roles` WHERE `job_roles_job_id` = :ji";
+        $s = $this->db->prepare($q);
+        $s->bindParam(":ji", $job_id);
+        if (!$s->execute()) {
+            $failure = $this->class_name.'.get_job_roles_by_job_id - E.02: Failure';
+            $this->logs->create($this->class_name_lower, $failure, json_encode(['error' => $s->errorInfo(), 'param' => func_get_args()]));
+            return ['status' => false, 'data' => $failure];
+        }
+        
+        return ['status' => true, 'data' => $s->fetchAll()];
     }
 
     
