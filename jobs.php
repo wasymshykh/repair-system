@@ -5,7 +5,7 @@ require_once DIR.'app/auth.php';
 
 $Jobs = new Jobs($db);
 
-$jobs = $Jobs->get_all_detailed_by();
+$jobs = $Jobs->get_all_detailed_by(true);
 if ($jobs['status']) {
     $jobs = $jobs['data'];
 } else {
@@ -24,7 +24,7 @@ $custom_footer_script = '
     KTUtil.onDOMContentLoaded(function () {
         initDatatable();
         handleSearchDatatable();
-        handleDeleteRows();
+        // handleDeleteRows();
     });
 </script>';
 

@@ -109,4 +109,52 @@
         </div>
         
     </div>
+
+    <div class="col-xl-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">Overall Settings</div>
+            </div>
+            <div class="card-body">
+
+                <form action="" method="POST">
+                    
+                    <div class="row mb-8">
+                        <label class="col-xl-3" for="site_currency">
+                            <div class="fs-6 fw-bold mt-2 mb-3">Currency</div>
+                        </label>
+                        <div class="col-xl-9">
+                            <input type="text" class="form-control form-control-solid" name="site_currency" id="site_currency" placeholder="Currency" value="<?=$_POST['site_currency']??$Settings->fetch('site_currency')?>">
+                            <?php if (isset($error_field['site_currency'])): ?><div class="form-text text-danger"><?=$error_field['site_currency']?></div><?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="row mb-8">
+                        <label class="col-xl-3" for="invoice_vat_value">
+                            <div class="fs-6 fw-bold mt-2 mb-3">VAT</div>
+                        </label>
+                        <div class="col-xl-5">
+                            <input type="text" class="form-control form-control-solid" name="invoice_vat_value" id="invoice_vat_value" placeholder="VAT Value" value="<?=$_POST['invoice_vat_value']??$Settings->fetch('invoice_vat_value')?>">
+                            <?php if (isset($error_field['invoice_vat_value'])): ?><div class="form-text text-danger"><?=$error_field['invoice_vat_value']?></div><?php endif; ?>
+                        </div>
+                        <div class="col-xl-4">
+                            <select name="invoice_vat_type" class="form-select form-select-solid">
+                                <option value="percentage" <?=$Settings->fetch('invoice_vat_type')=='percentage'?'selected':''?>>%</option>
+                                <option value="fixed" <?=$Settings->fetch('invoice_vat_type')=='fixed'?'selected':''?>>fixed</option>
+                            </select>
+                            <?php if (isset($error_field['invoice_vat_type'])): ?><div class="form-text text-danger"><?=$error_field['invoice_vat_type']?></div><?php endif; ?>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-10">
+                        <div class="col text-center">
+                            <button type="submit" class="btn btn-primary" name="overall">Update</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
 </div>

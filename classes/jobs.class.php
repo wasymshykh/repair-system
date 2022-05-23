@@ -108,9 +108,31 @@ class Jobs
         return ['status' => true, 'data' => $s->fetch()];
     }
 
-    public function get_all_detailed_by ()
+    public function get_job_logs_by ($col, $val, $desc = false)
+    {
+        $q = "SELECT * FROM `{$this->table_logs}` JOIN `users` ON `jlog_user_id` = `user_id` WHERE `$col` = :v";
+        if ($desc) {
+            $q .= " ORDER BY `jlog_created` DESC";
+        }
+        $s = $this->db->prepare($q);
+        $s->bindParam(":v", $val);
+        if (!$s->execute()) {
+            $failure = $this->class_name.'.get_job_logs_by - E.02: Failure';
+            $this->logs->create($this->class_name_lower, $failure, json_encode(['error' => $s->errorInfo(), 'param' => func_get_args()]));
+            return ['status' => false, 'data' => $failure];
+        }
+
+        if ($s->rowCount() == 0) { return ['status' => false, 'data' => 'Not found']; }
+
+        return ['status' => true, 'data' => $s->fetchAll()];
+    }
+
+    public function get_all_detailed_by ($desc = false)
     {
         $q = "SELECT * FROM `{$this->table_name}` JOIN `manufacturers` ON `manufacturer_id` = `job_manufacturer_id` JOIN `item_types` ON `job_item_type_id` = `item_type_id`";
+        if ($desc) {
+            $q .= " ORDER BY `job_created` DESC";
+        }
         $s = $this->db->prepare($q);
         $s->bindParam(":v", $val);
         if (!$s->execute()) {

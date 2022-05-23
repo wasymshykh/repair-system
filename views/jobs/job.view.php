@@ -285,7 +285,7 @@
         <div class="card card-flush py-4 flex-row-fluid">
             <div class="card-body">
                 
-                <div class="d-flex justify-content-around">
+                <div class="d-flex justify-content-center gap-4">
                     <?php if ($job['job_status'] != 'ORANGE'): ?>
                         <button class="btn btn-warning change-status" data-type="parts">mark awaiting parts</button>
                     <?php endif; ?>
@@ -483,7 +483,28 @@
                 </div>
                 <!--end::Close-->
             </div>
-            <div class="modal-body">                
+            <div class="modal-body">
+
+                <table class="table align-middle table-row-dashed fs-7 gy-5" id="logs_dt">
+                    <thead>
+                        <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
+                            <th>User</th>
+                            <th class="min-w-100px">Action</th>
+                            <th class="min-w-250px">Text</th>
+                            <th class="text-end min-w-100px">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="fw-bold text-gray-600">
+                        <?php foreach ($job_logs as $job_log): ?>
+                        <tr>
+                            <td><?=$job_log['user_name']?></td>
+                            <td><span class="badge badge-secondary"><?=$job_log['jlog_action']?></span></td>
+                            <td><?=$job_log['jlog_text']?></td>
+                            <td class="text-end"><?=normal_date($job_log['jlog_created'])?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
                 
             </div>
             <div class="modal-footer">
@@ -513,6 +534,12 @@
 
                 $('#modalconfirm').modal('show');
 
+            });
+
+            var datatable = $('#logs_dt').DataTable({
+                "info": false,
+                'order': [],
+                'pageLength': 10,
             });
 
         });

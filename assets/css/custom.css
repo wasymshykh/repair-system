@@ -6,3 +6,99 @@
     color: #ff8faa;
     background-color: #ffe5ed;
 }
+
+.navi {
+    padding: 0;
+    margin: 0;
+    display: block;
+    list-style: none;
+}
+
+.navi .navi-header, .navi .navi-footer, .navi .navi-section {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+.navi .navi-header {
+    padding: 0.75rem 1.5rem;
+}
+.navi .navi-item {
+    padding: 0;
+    display: block;
+    list-style: none;
+}
+
+.navi .navi-item .navi-link {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+}
+.navi .navi-item .navi-link {
+    font-size: 1rem;
+}
+.navi .navi-item .navi-link {
+    -webkit-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+    color: #3F4254;
+}
+
+.navi .navi-item .navi-link .navi-icon {
+    line-height: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+}
+.navi .navi-item .navi-link .navi-icon {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 2rem;
+    flex: 0 0 2rem;
+}
+.navi .navi-item .navi-link .navi-icon {
+    -webkit-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+}
+
+.navi .navi-item .navi-link .navi-text {
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+}
+.navi .navi-item .navi-link .navi-text {
+    font-size: 1rem;
+}
+.navi .navi-item .navi-link .navi-text {
+    font-size: 1rem;
+}
+.navi .navi-item .navi-link .navi-text {
+    -webkit-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+}
+.navi .navi-item .navi-link .navi-text {
+    color: #3F4254;
+}
+.dropdown-menu.dropdown-menu-sm {
+    width: 175px;
+}
+
+
+.navi .navi-item .navi-link:hover {
+    -webkit-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+    color: #009ef7;
+}
+.navi.navi-hover .navi-item .navi-link:hover {
+    background-color: #ebf8ff;
+}
+.navi .navi-item .navi-link:hover .navi-icon i,
+.navi .navi-item .navi-link:hover .navi-text {
+    color: #009ef7;
+}

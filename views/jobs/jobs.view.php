@@ -26,6 +26,13 @@
 </div>
 <?php endif; ?>
 
+<style>
+    table.dataTable tfoot tr th {
+        padding: 0;
+        padding-right: 0.5rem;
+    }
+</style>
+
 <div class="card card-flush">
     <div class="card-header align-items-center py-5 gap-2 gap-md-5">
         <div class="card-title">
@@ -37,24 +44,79 @@
                         <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black" />
                     </svg>
                 </span>
-                <input type="text" data-kt-ecommerce-category-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search Types" />
+                <input type="text" data-job-search="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search Jobs" />
             </div>
         </div>
+
         <div class="card-toolbar">
-            <a href="<?=href('create_job')?>" class="btn btn-primary">Add new job</a>
+            <div class="dropdown dropdown-inline">
+                <button type="button" class="btn btn-secondary btn-sm font-weight-bold" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="la la-download"></i>Tools</button>
+                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                    <ul class="navi flex-column navi-hover py-2">
+                        <li class="navi-header font-weight-bolder text-uppercase font-size-xs text-primary pb-2">Export Tools</li>
+                        <li class="navi-item">
+                            <a href="#" class="navi-link" id="export_print">
+                                <span class="navi-icon">
+                                    <i class="la la-print"></i>
+                                </span>
+                                <span class="navi-text">Print</span>
+                            </a>
+                        </li>
+                        <li class="navi-item">
+                            <a href="#" class="navi-link" id="export_copy">
+                                <span class="navi-icon">
+                                    <i class="la la-copy"></i>
+                                </span>
+                                <span class="navi-text">Copy</span>
+                            </a>
+                        </li>
+                        <li class="navi-item">
+                            <a href="#" class="navi-link" id="export_excel">
+                                <span class="navi-icon">
+                                    <i class="la la-file-excel-o"></i>
+                                </span>
+                                <span class="navi-text">Excel</span>
+                            </a>
+                        </li>
+                        <li class="navi-item">
+                            <a href="#" class="navi-link" id="export_csv">
+                                <span class="navi-icon">
+                                    <i class="la la-file-text-o"></i>
+                                </span>
+                                <span class="navi-text">CSV</span>
+                            </a>
+                        </li>
+                        <li class="navi-item">
+                            <a href="#" class="navi-link" id="export_pdf">
+                                <span class="navi-icon">
+                                    <i class="la la-file-pdf-o"></i>
+                                </span>
+                                <span class="navi-text">PDF</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
+
     </div>
 
     <div class="card-body pt-0">
-        <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_ecommerce_category_table">
+        <table class="table align-middle table-row-dashed fs-8 gy-5" id="jobs_table">
             <thead>
-                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
-                    <th class="w-10px pe-2">
-                        <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                            <input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_ecommerce_category_table .form-check-input" value="1" />
-                        </div>
-                    </th>
+                <tr class="table-search-input">
+                    <td>ID</td>
+                    <td>Manufacturer</td>
+                    <td>Type</td>
+                    <td>Item</td>
+                    <td></td>
+                    <td>Status</td>
+                    <td></td>
+                    <td></td>
+                </tr>
 
+                <tr class="text-start text-gray-400 fw-bolder fs-7 text-uppercase gs-0">
                     <th>ID</th>
                     <th>Manufacturer</th>
                     <th>Type</th>
@@ -68,20 +130,13 @@
             <tbody class="fw-bold text-gray-600">
                 <?php foreach ($jobs as $job): ?>
                 <tr>
-                    <td>
-                        <div class="form-check form-check-sm form-check-custom form-check-solid">
-                            <input class="form-check-input" type="checkbox" value="1" />
-                        </div>
-                    </td>
-
                     <td>J-<?=$job['job_id']?></td>
                     <td><?=$job['manufacturer_name']?></td>
                     <td><?=$job['item_type_name']?></td>
                     
                     <td>
-                        <span class="d-none" data-kt-ecommerce-category-filter="category_id"><?=$job['job_id']?></span>
-                        <a href="<?=href('job.php?i='.$job['job_id'], false)?>" class="text-gray-800 text-hover-primary fs-5 fw-bolder mb-1" data-kt-ecommerce-category-filter="category_name"><?=$job['job_item_name']?></a>
-                        <div class="text-muted fs-7 fw-bolder"><?=$job['job_description']?></div>
+                        <a href="<?=href('job.php?i='.$job['job_id'], false)?>" class="text-gray-800 text-hover-primary fs-8 fw-bolder mb-1"><?=$job['job_item_name']?></a>
+                        <div class="text-muted fs-9 fw-bolder"><?=$job['job_description']?></div>
                     </td>
 
                     <td><?=normal_date($job['job_receiving_date'], 'M d, Y')?></td>
@@ -105,7 +160,7 @@
                                 <a href="<?=href('job.php?i='.$job['job_id'], false)?>" class="menu-link px-3">View</a>
                             </div>
                             <div class="menu-item px-3">
-                                <a href="<?=href('job.php?d='.$job['item_type_id'], false)?>" class="menu-link px-3" data-kt-ecommerce-category-filter="delete_row">Delete</a>
+                                <a href="<?=href('job.php?d='.$job['item_type_id'], false)?>" class="menu-link px-3">Delete</a>
                             </div>
                         </div>
                     </td>
@@ -121,32 +176,139 @@
 
     const url = "<?=URL?>";
 
-    var table = document.querySelector('#kt_ecommerce_category_table');
+    var table = document.querySelector('#jobs_table');
     var datatable;
 
     
     // Private functions
     var initDatatable = function () {
-        // Init datatable --- more info on datatables: https://datatables.net/manual/
+
+        $('#jobs_table thead tr.table-search-input td').each(function () {
+            var title = $(this).text();
+            if (title != "") {
+
+                if (title.toLowerCase() == 'status') {
+
+                    var html = $(`<div><select class="form-select form-select-sm form-select2" multiple>
+                                    <option></option>
+                                    <option value="waiting for diagnostics">waiting for diagnostics</option>
+                                    <option value="waiting for parts">waiting for parts</option>
+                                    <option value="repaired">repaired</option>
+                                    <option value="cannot be repaired">cannot be repaired</option>
+                                </select></div>`);
+                    html.find('.form-select2').select2({placeholder: "Select Status"});
+                    $(this).html(html);
+
+                } else {
+                    $(this).html('<input type="text" class="form-control form-control-sm" placeholder="Search ' + title + '" />');
+                }
+
+            }
+        });
+
         datatable = $(table).DataTable({
             "info": false,
             'order': [],
             'pageLength': 10,
+            buttons: [
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+				{
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+				{
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+				{
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+				{ 
+                    extend: 'pdfHtml5', 
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+            ],
             'columnDefs': [
-                { orderable: false, targets: 0 }, // Disable ordering on column 0 (checkbox)
-                { orderable: false, targets: 3 }, // Disable ordering on column 3 (actions)
-            ]
+                { orderable: false, targets: 7 }, // Disable ordering on column 7 (actions)
+            ],
+            initComplete: function () {
+                // Apply the search
+                this.api()
+                    .columns()
+                    .every(function () {
+                        var that = this;
+
+                        var input_field = $('input', $('#jobs_table thead tr.table-search-input td')[that[0][0]]);
+                        if (input_field.length > 0) {
+                            input_field.on('keyup change clear', function () {
+                                if (that.search() !== this.value) {
+                                    that.search(this.value).draw();
+                                }
+                            });
+                        } else {
+
+                            
+                            var select_field = $('select', $('#jobs_table thead tr.table-search-input td')[that[0][0]]);
+                            select_field.on('keyup change clear', function () {
+                                
+                                var tosearch = $(this).val().join("|");
+                                if (that.search() !== tosearch) {
+                                    that.search(tosearch, true, false).draw();
+                                }
+                            });
+
+                        }
+                        
+                    });
+            },
+            
         });
 
         // Re-init functions on datatable re-draws
         datatable.on('draw', function () {
-            handleDeleteRows();
+            // handleDeleteRows();
         });
+        
+		$('#export_print').on('click', function(e) {
+			e.preventDefault();
+			datatable.button(0).trigger();
+		});
+		$('#export_copy').on('click', function(e) {
+			e.preventDefault();
+			datatable.button(1).trigger();
+		});
+		$('#export_excel').on('click', function(e) {
+			e.preventDefault();
+			datatable.button(2).trigger();
+		});
+		$('#export_csv').on('click', function(e) {
+			e.preventDefault();
+			datatable.button(3).trigger();
+		});
+		$('#export_pdf').on('click', function(e) {
+			e.preventDefault();
+			datatable.button(4).trigger();
+		});
+
     }
 
     // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
     var handleSearchDatatable = () => {
-        const filterSearch = document.querySelector('[data-kt-ecommerce-category-filter="search"]');
+        const filterSearch = document.querySelector('[data-job-search="search"]');
         filterSearch.addEventListener('keyup', function (e) {
             datatable.search(e.target.value).draw();
         });

@@ -17,6 +17,13 @@ if (isset($_GET['i']) && !empty($_GET['i']) && is_numeric($_GET['i'])) {
     message_move('error', 'Job does not exists', 'jobs.php');
 }
 
+$job_logs = $Jobs->get_job_logs_by('jlog_job_id', $job['job_id'], true);
+if ($job_logs['status']) {
+    $job_logs = $job_logs['data'];
+} else {
+    $job_logs = [];
+}
+
 $modal_open = "";
 $error_field = [];
 if (isset($_POST) && !empty($_POST)) {
@@ -176,6 +183,11 @@ if (isset($_POST) && !empty($_POST)) {
     }
 
 }
+
+
+$custom_head_css = ['assets/plugins/custom/datatables/datatables.bundle.css'];
+
+$custom_footer_js = ['assets/plugins/custom/datatables/datatables.bundle.js'];
 
 $page_title = "Job Details";
 $page_type = "job";

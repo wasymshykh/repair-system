@@ -113,6 +113,50 @@ if (isset($_POST) && !empty($_POST)) {
             }
         }
 
+    } else if (isset($_POST['overall'])) {
+
+        $changes = [];
+
+        if (isset($_POST['site_currency']) && !empty(normal_text($_POST['site_currency']))) {
+            $site_currency = normal_text($_POST['site_currency']);
+            if ($site_currency != $Settings->fetch('site_currency')) {
+                $changes['site_currency'] = $site_currency;
+            }
+        } else {
+            $error_field['site_currency'] = "Currency is required";
+        }
+
+        if (isset($_POST['invoice_vat_value']) && !empty(normal_text($_POST['invoice_vat_value']))) {
+            $invoice_vat_value = normal_text($_POST['invoice_vat_value']);
+            if ($invoice_vat_value != $Settings->fetch('invoice_vat_value')) {
+                $changes['invoice_vat_value'] = $invoice_vat_value;
+            }
+        } else {
+            $error_field['invoice_vat_value'] = "VAT value is required";
+        }
+        
+        if (isset($_POST['invoice_vat_type']) && !empty(normal_text($_POST['invoice_vat_type']))) {
+            $invoice_vat_type = normal_text($_POST['invoice_vat_type']);
+            if ($invoice_vat_type != $Settings->fetch('invoice_vat_type')) {
+                $changes['invoice_vat_type'] = $invoice_vat_type;
+            }
+        } else {
+            $error_field['invoice_vat_type'] = "VAT value type is required";
+        }
+        
+        if (empty($error_field) && empty($errors)) {
+            if (!empty($changes)) {
+                $result = $Settings->update_settings_multiple ($changes);
+                if ($result['status']) {
+                    message_move('success', 'Overall settings has been updated', 'settings.php');
+                } else {
+                    $errors[] = "Unable to update the overall settings";
+                }
+            } else {
+                message_move('success', 'Overall settings is up to date', 'settings.php');
+            }
+        }
+
     }
 
 }
