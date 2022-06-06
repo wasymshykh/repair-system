@@ -19,7 +19,36 @@ class Roles
     public function get_permissions ()
     {
         return [
-            ['name' => 'types', 'text' => 'Types Management', 'types' => ['read', 'write', 'create']]
+            [
+                'name' => 'types', 
+                'text' => 'Types Management', 
+                'types' => ['read', 'write', 'create', 'delete']
+            ],
+            [
+                'name' => 'manufacturers',
+                'text' => 'Manufacturers Management',
+                'types' => ['read', 'write', 'create', 'delete']
+            ],
+            [
+                'name' => 'jobs',
+                'text' => 'Jobs Management',
+                'types' => ['read', 'write', 'create', 'delete', 'logs']
+            ],
+            [
+                'name' => 'settings',
+                'text' => 'Website Settings',
+                'types' => ['read', 'write']
+            ],
+            [
+                'name' => 'users',
+                'text' => 'Users Management',
+                'types' => ['read', 'write', 'create']
+            ],
+            [
+                'name' => 'roles',
+                'text' => 'Roles Management',
+                'types' => ['read', 'write', 'create']
+            ]
         ];
     }
 

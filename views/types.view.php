@@ -40,9 +40,11 @@
                 <input type="text" data-kt-ecommerce-category-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search Types" />
             </div>
         </div>
+        <?php if ($role_permission['types']['create']): ?>
         <div class="card-toolbar">
             <a href="<?=href('types_create')?>" class="btn btn-primary">Add Type</a>
         </div>
+        <?php endif; ?>
     </div>
 
     <div class="card-body pt-0">
@@ -88,12 +90,16 @@
                             </svg>
                         </span></a>
                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                            <?php if ($role_permission['types']['write']): ?>
                             <div class="menu-item px-3">
                                 <a href="<?=href('types_edit.php?i='.$type['item_type_id'], false)?>" class="menu-link px-3">Edit</a>
                             </div>
+                            <?php endif; ?>
+                            <?php if ($role_permission['types']['delete']): ?>
                             <div class="menu-item px-3">
                                 <a href="<?=href('types.php?d='.$type['item_type_id'], false)?>" class="menu-link px-3" data-kt-ecommerce-category-filter="delete_row">Delete</a>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </td>
                 </tr>

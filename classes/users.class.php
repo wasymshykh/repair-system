@@ -141,6 +141,64 @@ class Users
         return ['status' => true];
     }
 
+    public function get_permission ($string)
+    {
+        $permission = [
+            'types' => [
+                'read' => false,
+                'write' => false,
+                'create' => false,
+                'delete' => false
+            ],
+            'manufacturers' => [
+                'read' => false,
+                'write' => false,
+                'create' => false,
+                'delete' => false
+            ],
+            'jobs' => [
+                'read' => false,
+                'write' => false,
+                'create' => false,
+                'delete' => false,
+                'logs' => false
+            ],
+            'settings' => [
+                'read' => false,
+                'write' => false
+            ],
+            'users' => [
+                'read' => false,
+                'write' => false,
+                'create' => false
+            ],
+            'roles' => [
+                'read' => false,
+                'write' => false,
+                'create' => false
+            ]
+        ];
+
+        if ($string == '*' || json_decode($string) === false) {
+            foreach ($permission as $key => $types) {
+                foreach ($types as $_key => $val) {
+                    $permission[$key][$_key] = true;
+                }
+            }
+            return $permission;
+        } 
+
+        $string = json_decode($string, true);
+
+        foreach ($string as $key => $vals) {
+            foreach ($vals as $_key => $_vals) {
+                $permission[$key][$_key] = $_vals == '1' ? true : false;
+            }
+        }
+
+        return $permission;
+    }
+
     public function record_log ($user_id, $type, $text)
     {
         $q = "INSERT INTO `{$this->table_logs}` (`ulog_user_id`, `ulog_type`, `ulog_text`, `ulog_created`) VALUES (:u, :ty, :tx, :dt)";

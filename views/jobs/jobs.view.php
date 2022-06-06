@@ -135,7 +135,8 @@
                     <td><?=$job['item_type_name']?></td>
                     
                     <td>
-                        <a href="<?=href('job.php?i='.$job['job_id'], false)?>" class="text-gray-800 text-hover-primary fs-8 fw-bolder mb-1"><?=$job['job_item_name']?></a>
+                        <span class="d-none" data-kt-ecommerce-category-filter="category_id"><?=$job['job_id']?></span>
+                        <a href="<?=href('job.php?i='.$job['job_id'], false)?>" class="text-gray-800 text-hover-primary fs-8 fw-bolder mb-1" data-kt-ecommerce-category-filter="category_name"><?=$job['job_item_name']?></a>
                         <div class="text-muted fs-9 fw-bolder"><?=$job['job_description']?></div>
                     </td>
 
@@ -159,9 +160,12 @@
                             <div class="menu-item px-3">
                                 <a href="<?=href('job.php?i='.$job['job_id'], false)?>" class="menu-link px-3">View</a>
                             </div>
+                            
+                            <?php if ($role_permission['jobs']['delete']): ?>
                             <div class="menu-item px-3">
-                                <a href="<?=href('job.php?d='.$job['item_type_id'], false)?>" class="menu-link px-3">Delete</a>
+                                <a href="<?=href('job.php?d='.$job['item_type_id'], false)?>" class="menu-link px-3" data-kt-ecommerce-category-filter="delete_row">Delete</a>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </td>
                 </tr>
@@ -280,7 +284,7 @@
 
         // Re-init functions on datatable re-draws
         datatable.on('draw', function () {
-            // handleDeleteRows();
+            handleDeleteRows();
         });
         
 		$('#export_print').on('click', function(e) {
@@ -311,6 +315,89 @@
         const filterSearch = document.querySelector('[data-job-search="search"]');
         filterSearch.addEventListener('keyup', function (e) {
             datatable.search(e.target.value).draw();
+        });
+    }
+
+    
+    var sendDeleteRequest = (categoryId, cb) => {
+        $.ajax({
+            method: "POST",
+            url: url+'/api/jobs/delete.php',
+            data: { id: categoryId }
+        }).done(function(msg) {
+            cb(true, msg);
+        }).fail(function(request) {
+            var failure = "Unable to delete";
+            if (request.responseJSON != undefined && request.responseJSON.message != undefined) {
+                failure = request.responseJSON.message;
+            }
+            cb(false, failure);
+        });
+    }
+
+    
+    // Delete cateogry
+    var handleDeleteRows = () => {
+        // Select all delete buttons
+        const deleteButtons = table.querySelectorAll('[data-kt-ecommerce-category-filter="delete_row"]');
+
+        deleteButtons.forEach(d => {
+            // Delete button on click
+            d.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Select parent row
+                const parent = e.target.closest('tr');
+
+                // Get category name
+                const categoryName = parent.querySelector('[data-kt-ecommerce-category-filter="category_name"]').innerText;
+                const categoryId = parent.querySelector('[data-kt-ecommerce-category-filter="category_id"]').innerText;
+
+                Swal.fire({
+                    text: "Are you sure you want to delete " + categoryName + "?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Yes, delete!",
+                    cancelButtonText: "No, cancel",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-active-light-primary"
+                    }
+                }).then(function (result) {
+                    if (result.value) {
+
+                        sendDeleteRequest(categoryId, function (success, msg) {
+                            if (success) {
+                                Swal.fire({
+                                    text: "You have deleted " + categoryName + "!.",
+                                    icon: "success",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn fw-bold btn-primary",
+                                    }
+                                }).then(function () {
+                                    // Remove current row
+                                    datatable.row($(parent)).remove().draw();
+                                });
+                            } else {
+                                Swal.fire({
+                                    text: categoryName + " was not deleted due to '"+msg+"'",
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn fw-bold btn-primary",
+                                    }
+                                });
+                            }
+                        });
+                        
+                    } 
+                    
+                });
+            })
         });
     }
 

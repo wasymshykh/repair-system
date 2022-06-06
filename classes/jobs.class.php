@@ -18,6 +18,43 @@ class Jobs
         $this->table_logs = "job_logs";
     }
 
+    public function delete ($job_id)
+    {
+        $q = "DELETE FROM `{$this->table_name}` WHERE `job_id` = :i";
+        $s = $this->db->prepare($q);
+        $s->bindParam(":i", $job_id);
+        if (!$s->execute()) {
+            $failure = $this->class_name.'.delete - E.02: Failure';
+            $this->logs->create($this->class_name_lower, $failure, json_encode(['error' => $s->errorInfo(), 'param' => func_get_args()]));
+            return ['status' => false, 'data' => $failure];
+        }
+
+        return ['status' => true];
+    }
+
+    public function delete_transaction ($job_id, $name, $user_id, Users $Users)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            $this->delete($job_id);
+
+            $Users->record_log($user_id, 'JOB_DELETE', 'At '.normal_date(current_date()).' user deleted a job [ID-"'.$job_id.'"] [NAME-"'.$name.'"]');
+
+            $this->db->commit();
+            
+            return ['status' => true, 'data' => 'Transaction successful'];
+
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            
+            $failure = $this->class_name.'.delete_transaction - E.10: Exception';
+            $this->logs->create($failure, json_encode(['error' => $e->getMessage(), 'exception' => $e, 'param' => func_get_args()]));
+
+            return ['status' => false, 'data' => 'Transaction failed'];
+        }
+    }
+
     public function insert_transaction ($manu_id, $type_id, $customer_name, $customer_email, $customer_phone, $item_name, $description, $price, $receiving_date, $status, $assigned_roles, $user_id, Users $Users)
     {
         try {
@@ -134,9 +171,27 @@ class Jobs
             $q .= " ORDER BY `job_created` DESC";
         }
         $s = $this->db->prepare($q);
-        $s->bindParam(":v", $val);
         if (!$s->execute()) {
             $failure = $this->class_name.'.get_all_detailed_by - E.02: Failure';
+            $this->logs->create($this->class_name_lower, $failure, json_encode(['error' => $s->errorInfo(), 'param' => func_get_args()]));
+            return ['status' => false, 'data' => $failure];
+        }
+
+        if ($s->rowCount() == 0) { return ['status' => false, 'data' => 'Not found']; }
+
+        return ['status' => true, 'data' => $s->fetchAll()];
+    }
+
+    public function get_all_detailed_by_role_id ($role_id, $desc = false)
+    {
+        $q = "SELECT * FROM `{$this->table_name}` JOIN `job_roles` ON `job_id` = `job_roles_job_id` JOIN `manufacturers` ON `manufacturer_id` = `job_manufacturer_id` JOIN `item_types` ON `job_item_type_id` = `item_type_id` WHERE `job_roles_role_id` = :r";
+        if ($desc) {
+            $q .= " ORDER BY `job_created` DESC";
+        }
+        $s = $this->db->prepare($q);
+        $s->bindParam(":r", $role_id);
+        if (!$s->execute()) {
+            $failure = $this->class_name.'.get_all_detailed_by_role_id - E.02: Failure';
             $this->logs->create($this->class_name_lower, $failure, json_encode(['error' => $s->errorInfo(), 'param' => func_get_args()]));
             return ['status' => false, 'data' => $failure];
         }

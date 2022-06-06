@@ -101,6 +101,7 @@
 									</span>
 								</a>
 								
+								<?php if ($role_permission['users']['read'] && $role_permission['roles']): ?>
 								<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion <?=isset($page_type) && $page_type=="users"?'here':''?> me-lg-1">
 									<span class="menu-link py-3">
 										<span class="menu-title">Users</span>
@@ -108,6 +109,7 @@
 									</span>
 									<div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px">
 										
+										<?php if ($role_permission['users']['read']): ?>
 										<div data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item menu-lg-down-accordion">
 											<span class="menu-link py-3">
 												<span class="menu-icon">
@@ -123,6 +125,8 @@
 												<span class="menu-arrow"></span>
 											</span>
 											<div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-active-bg py-lg-4 w-lg-225px">
+												
+												<?php if ($role_permission['users']['create']): ?>
 												<div class="menu-item">
 													<a class="menu-link py-3" href="<?=href('users_create')?>">
 														<span class="menu-bullet">
@@ -131,6 +135,8 @@
 														<span class="menu-title">Create User</span>
 													</a>
 												</div>
+												<?php endif; ?>
+
 												<div class="menu-item">
 													<a class="menu-link py-3" href="<?=href('users')?>">
 														<span class="menu-bullet">
@@ -141,7 +147,9 @@
 												</div>
 											</div>
 										</div>
-										
+										<?php endif; ?>
+
+										<?php if ($role_permission['roles']['read']): ?>
 										<div data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item menu-lg-down-accordion">
 											<span class="menu-link py-3">
 												<span class="menu-icon">
@@ -157,6 +165,7 @@
 												<span class="menu-arrow"></span>
 											</span>
 											<div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-active-bg py-lg-4 w-lg-225px">
+												<?php if ($role_permission['roles']['create']): ?>
 												<div class="menu-item">
 													<a class="menu-link py-3" href="<?=href('roles_create')?>">
 														<span class="menu-bullet">
@@ -165,6 +174,7 @@
 														<span class="menu-title">Create Role</span>
 													</a>
 												</div>
+												<?php endif; ?>
 												<div class="menu-item">
 													<a class="menu-link py-3" href="<?=href('roles')?>">
 														<span class="menu-bullet">
@@ -175,33 +185,44 @@
 												</div>
 											</div>
 										</div>
+										<?php endif; ?>
 										
 									</div>
 								</div>
+								<?php endif; ?>
 
+								<?php if ($role_permission['types']['read']): ?>
 								<a href="<?=href('types')?>" class="menu-item <?=isset($page_type) && $page_type=="types"?'here':''?> me-lg-1">
 									<span class="menu-link py-3">Types</span>
 								</a>
+								<?php endif; ?>
 								
+								<?php if ($role_permission['manufacturers']['read']): ?>
 								<a href="<?=href('manufacturers')?>" class="menu-item <?=isset($page_type) && $page_type=="manufacturers"?'here':''?> me-lg-1">
 									<span class="menu-link py-3">Manufacturers</span>
 								</a>
+								<?php endif; ?>
 
+								<?php if ($role_permission['jobs']['read']): ?>
 								<a href="<?=href('jobs')?>" class="menu-item <?=isset($page_type) && $page_type=="jobs"?'here':''?> me-lg-1">
 									<span class="menu-link py-3">Jobs</span>
 								</a>
+								<?php endif; ?>
 								
+								<?php if ($role_permission['settings']['read']): ?>
 								<a href="<?=href('settings')?>" class="menu-item <?=isset($page_type) && $page_type=="settings"?'here':''?> me-lg-1">
 									<span class="menu-link py-3">Settings</span>
 								</a>
+								<?php endif; ?>
 							</div>
 
+							<?php if ($role_permission['jobs']['create']): ?>
 							<div class="d-flex align-items-stretch flex-shrink-0 p-4 p-lg-0 me-lg-2">
 								<div class="d-flex align-items-center">
 									<a href="<?=href('create_job')?>" class="btn btn-sm btn-primary">Create Job <i class="bi bi-arrow-right"></i></a>
 								</div>
 							</div>
-
+							<?php endif; ?>
 							
 						</div>
 						

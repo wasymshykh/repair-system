@@ -19,3 +19,5 @@ if (isset($_SESSION['logged']) && !empty($_SESSION['logged'])) {
 } else {
     message_move('error', 'Login to access the page', 'login.php');
 }
+
+$role_permission = $Users->get_permission($logged_user['role_permission']);

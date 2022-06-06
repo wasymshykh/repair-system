@@ -6,11 +6,22 @@ require_once 'app/auth.php';
 
 $Jobs = new Jobs($db);
 
-$jobs = $Jobs->get_all_detailed_by(true);
-if ($jobs['status']) {
-    $jobs = $jobs['data'];
+$job_permission = $logged_user['role_permission'];
+
+if ($job_permission == '*') {
+    $jobs = $Jobs->get_all_detailed_by(true);
+    if ($jobs['status']) {
+        $jobs = $jobs['data'];
+    } else {
+        $jobs = [];
+    }
 } else {
-    $jobs = [];
+    $jobs = $Jobs->get_all_detailed_by_role_id($logged_user['user_role_id'], true);
+    if ($jobs['status']) {
+        $jobs = $jobs['data'];
+    } else {
+        $jobs = [];
+    }
 }
 
 

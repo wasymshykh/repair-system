@@ -17,6 +17,35 @@ if (isset($_GET['i']) && !empty($_GET['i']) && is_numeric($_GET['i'])) {
     message_move('error', 'Job does not exists', 'jobs.php');
 }
 
+$job_permission = $logged_user['role_permission'];
+
+if ($job_permission != '*') {
+    
+    $job_role_found = false;
+
+    $job_roles = $Jobs->get_job_roles_by_job_id($job['job_id']);
+    if ($job_roles['status']) {
+        $job_roles = $job_roles['data'];
+
+        foreach ($job_roles as $job_role) {
+            if ($logged_user['user_role_id'] == $job_role['job_roles_role_id']) {
+                $job_role_found = true;
+            }
+        }
+
+        if (!$job_role_found) {
+            message_move('error', 'Permission is not allowed', 'jobs.php');
+        }
+    } else {
+        $job_roles = [];
+    }
+
+
+
+}
+
+
+
 $job_logs = $Jobs->get_job_logs_by('jlog_job_id', $job['job_id'], true);
 if ($job_logs['status']) {
     $job_logs = $job_logs['data'];

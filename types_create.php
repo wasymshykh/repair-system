@@ -4,6 +4,10 @@ require_once 'app/start.php';
 
 require_once DIR.'app/auth.php';
 
+if (!$role_permission['types']['create']) {
+    message_move('error', 'Permission is not allowed', 'types.php');
+}
+
 $Types = new Types($db);
 
 if (isset($_POST) && !empty($_POST)) {

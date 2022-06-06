@@ -40,9 +40,12 @@
                 <input type="text" data-kt-ecommerce-category-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search Manufacturers" />
             </div>
         </div>
+
+        <?php if ($role_permission['manufacturers']['create']): ?>
         <div class="card-toolbar">
             <a href="<?=href('manufacturers_create')?>" class="btn btn-primary">Add Manufacturer</a>
         </div>
+        <?php endif; ?>
     </div>
 
     <div class="card-body pt-0">
@@ -88,12 +91,16 @@
                             </svg>
                         </span></a>
                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                            <?php if ($role_permission['manufacturers']['write']): ?>
                             <div class="menu-item px-3">
                                 <a href="<?=href('manufacturers_edit.php?i='.$manufacturer['manufacturer_id'], false)?>" class="menu-link px-3">Edit</a>
                             </div>
+                            <?php endif; ?>
+                            <?php if ($role_permission['manufacturers']['delete']): ?>
                             <div class="menu-item px-3">
                                 <a href="<?=href('manufacturers.php?d='.$manufacturer['manufacturer_id'], false)?>" class="menu-link px-3" data-kt-ecommerce-category-filter="delete_row">Delete</a>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </td>
                 </tr>
@@ -144,20 +151,14 @@
             url: url+'/api/manufacturers/delete.php',
             data: { id: categoryId }
         }).done(function(msg) {
-            
             cb(true, msg);
-
         }).fail(function(request) {
-
             var failure = "Unable to delete";
             if (request.responseJSON != undefined && request.responseJSON.message != undefined) {
                 failure = request.responseJSON.message;
             }
-            
             cb(false, failure);
-            
         });
-
     }
 
     // Delete cateogry
