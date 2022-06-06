@@ -1,5 +1,7 @@
 <?php 
 
+use Ramsey\Uuid\Uuid;
+
 require_once 'app/start.php';
 require_once DIR.'app/auth.php';
 
@@ -68,6 +70,11 @@ $item_name = $job['job_item_name'];
 $job_receiving_date = $job['job_receiving_date'];
 $job_description = $job['job_description'];
 
+
+$pictures = [];
+if (!empty($job['job_pictures'])) {
+    $pictures = json_decode($job['job_pictures']);
+}
 
 if (isset($_POST) && !empty($_POST)) {
 
@@ -172,6 +179,65 @@ if (isset($_POST) && !empty($_POST)) {
         } else {
             $error_field['assign_roles'] = "Assign job to atleast one role";
         }
+
+        
+        $old_pictures = $pictures;
+        $pictures = [];
+
+        if (isset($_FILES) && !empty($_FILES) && isset($_FILES['pictures']) && !empty($_FILES['pictures'])) {
+            $file_pictures = $_FILES['pictures'];
+            $pictures_error = false;
+
+            foreach ($file_pictures['name'] as $i => $picture_name) {
+
+                if (empty($file_pictures["tmp_name"][$i])) { continue; }
+                
+                $target_dir = DIR."assets/media/uploads/pictures/";
+                $target_file = $target_dir . basename($file_pictures["name"][$i]);
+
+                $image_file_type = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+                if($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg") {
+                    $error_field['pictures'] = "Sorry, only jpg, jpeg & png files are allowed.";
+                    $pictures_error = true;
+                }
+
+                if (!$pictures_error) {
+                    $check = exif_imagetype($file_pictures["tmp_name"][$i]);
+                    if (!$check) {
+                        $error_field['pictures'] = "Sorry, submitted file is not an image";
+                        $pictures_error = true;
+                    }
+
+                    if (!$pictures_error) {
+                        if ($file_pictures["size"][$i] > 3000000) {
+                            $error_field['pictures'] = "Sorry, your file is too large. Max. image allowed is 3 MB";
+                            $pictures_error = true;
+                        }
+            
+                        if (!$pictures_error) {
+                            $field_value = Uuid::uuid4()->toString().'.'.$image_file_type;
+                            $new_file_path = $target_dir.$field_value;
+                            if (!move_uploaded_file($file_pictures["tmp_name"][$i], $new_file_path)) {
+                                $error_field['pictures'] = "Sorry, there was an error uploading your file.";
+                            } else {
+                                $pictures[] = $field_value;
+                            }
+                        }
+                    }
+                }
+            } 
+        }
+
+        if (isset($_POST['pictures']) && !empty($_POST['pictures'])) {
+            foreach ($_POST['pictures'] as $p) {
+                $pictures[] = $p;
+            }
+        }
+
+        if (json_encode($pictures) != json_encode($old_pictures)) {
+            $changes['job_pictures'] = json_encode($pictures);
+        }
+
 
         if (empty($error_field) && empty($errors)) {
 

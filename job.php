@@ -44,7 +44,10 @@ if ($job_permission != '*') {
 
 }
 
-
+$pictures = [];
+if (!empty($job['job_pictures'])) {
+    $pictures = json_decode($job['job_pictures']);
+}
 
 $job_logs = $Jobs->get_job_logs_by('jlog_job_id', $job['job_id'], true);
 if ($job_logs['status']) {
@@ -216,7 +219,7 @@ if (isset($_POST) && !empty($_POST)) {
 
 $custom_head_css = ['assets/plugins/custom/datatables/datatables.bundle.css'];
 
-$custom_footer_js = ['assets/plugins/custom/datatables/datatables.bundle.js'];
+$custom_footer_js = ['assets/plugins/custom/datatables/datatables.bundle.js', 'assets/plugins/custom/fslightbox/fslightbox.bundle.js'];
 
 $page_title = "Job Details";
 $page_type = "job";

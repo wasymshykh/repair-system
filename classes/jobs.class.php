@@ -55,14 +55,14 @@ class Jobs
         }
     }
 
-    public function insert_transaction ($manu_id, $type_id, $customer_name, $customer_email, $customer_phone, $item_name, $description, $price, $receiving_date, $status, $assigned_roles, $user_id, Users $Users)
+    public function insert_transaction ($manu_id, $type_id, $customer_name, $customer_email, $customer_phone, $item_name, $description, $price, $receiving_date, $status, $pictures_text, $assigned_roles, $user_id, Users $Users)
     {
         try {
             $this->db->beginTransaction();
 
             $dt = current_date();
 
-            $this->insert($manu_id, $type_id, $customer_name, $customer_email, $customer_phone, $item_name, $description, $price, $receiving_date, $status, $dt);
+            $this->insert($manu_id, $type_id, $customer_name, $customer_email, $customer_phone, $item_name, $description, $price, $receiving_date, $status, $pictures_text, $dt);
             $job_id = $this->db->lastInsertId();
             $this->job_role_insert($assigned_roles, $job_id);
 
@@ -82,9 +82,9 @@ class Jobs
 
     }
 
-    public function insert ($manu_id, $type_id, $customer_name, $customer_email, $customer_phone, $item_name, $description, $price, $receiving_date, $status, $dt = null)
+    public function insert ($manu_id, $type_id, $customer_name, $customer_email, $customer_phone, $item_name, $description, $price, $receiving_date, $status, $pictures_text, $dt = null)
     {
-        $q = "INSERT INTO `{$this->table_name}` (`job_manufacturer_id`, `job_item_type_id`, `job_customer_name`, `job_customer_email`, `job_customer_phone`, `job_item_name`, `job_description`, `job_price`, `job_receiving_date`, `job_status`, `job_created`) VALUE (:mi, :ti, :cn, :ce, :cp, :jin, :jd, :jp, :jrd, :s, :dt)";
+        $q = "INSERT INTO `{$this->table_name}` (`job_manufacturer_id`, `job_item_type_id`, `job_customer_name`, `job_customer_email`, `job_customer_phone`, `job_item_name`, `job_description`, `job_price`, `job_receiving_date`, `job_status`, `job_pictures`, `job_created`) VALUE (:mi, :ti, :cn, :ce, :cp, :jin, :jd, :jp, :jrd, :s, :pt, :dt)";
         $s = $this->db->prepare($q);
         $s->bindParam(":mi", $manu_id);
         $s->bindParam(":ti", $type_id);
@@ -96,6 +96,7 @@ class Jobs
         $s->bindParam(":jp", $price);
         $s->bindParam(":jrd", $receiving_date);
         $s->bindParam(":s", $status);
+        $s->bindParam(":pt", $pictures_text);
         if (empty($dt)) {
             $dt = current_date();
         }

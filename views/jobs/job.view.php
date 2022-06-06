@@ -306,6 +306,45 @@
         </div>
     </div>
 
+
+    <?php if (!empty($pictures)): ?>
+    <div class="d-flex flex-column flex-xl-row gap-7 gap-lg-10">
+        <div class="card card-flush py-4 flex-row-fluid">
+            <div class="card-header">
+                <div class="card-title"><h2>Job Pictures</h2></div>
+            </div>
+            <div class="card-body">
+
+                <div class="rounded border p-10 p-lg-20">
+                    <!--begin::Row-->
+                    <div class="row">
+                        <?php foreach ($pictures as $p): ?>
+                        <!--begin::Col-->
+                        <div class="col-lg-4">
+                            <!--begin::Overlay-->
+                            <a class="d-block overlay" data-fslightbox="lightbox-basic" href="<?=URL?>/assets/media/uploads/pictures/<?=$p?>">
+                                <!--begin::Image-->
+                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" style="background-image:url('<?=URL?>/assets/media/uploads/pictures/<?=$p?>')"></div>
+                                <!--end::Image-->
+                                <!--begin::Action-->
+                                <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                    <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                </div>
+                                <!--end::Action-->
+                            </a>
+                            <!--end::Overlay-->
+                        </div>
+                        <!--end::Col-->
+                        <?php endforeach; ?>
+                    </div>
+                    <!--end::Row-->
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <?php if ($role_permission['jobs']['write']): ?>
     <div class="d-flex flex-column flex-xl-row gap-7 gap-lg-10">
         <div class="card card-flush py-4 flex-row-fluid">

@@ -1,4 +1,37 @@
-<form action="" method="post">
+<link href="<?=URL?>/assets/fileinput/css/fileinput.min.css" rel="stylesheet">
+<style>
+    .file-preview {
+        border-radius: 8px;
+        border: 1px solid #e0e6eb;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .file-drop-zone {
+        border: 1px dashed #e0e6eb;
+        min-height: 80px;
+        border-radius: 6px;
+        margin: 20px 20px 0px 0px;
+        padding: 10px;
+    }
+    .file-drop-zone.clickable:hover {
+        border: 1px dashed #999;
+    }
+    .file-preview .fileinput-remove {
+        top: 5px;
+        right: 5px;
+        line-height: 12px;
+        opacity: 0.2;
+        border: 1px solid #000;
+        border-radius: 50%;
+        padding: 0.4rem;
+    }
+    .file-drop-zone-title {
+        font-size: 1em;
+        padding: 12px 10px;
+    }
+</style>
+
+<form action="" method="post" enctype="multipart/form-data">
 
     <div class="card mb-5">
         <div class="card-body">
@@ -134,11 +167,35 @@
         </div>
     </div>
 
+    
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="card-title">Pictures</div>
+        </div>
+        <div class="card-body">
+
+            <div class="form-group">
+                <input id="file-pictures" type="file" name="pictures[]" multiple>
+            </div>
+
+            <?php foreach($pictures as $p): ?>
+                <input type="hidden" name="pictures[]" value="<?=$p?>">
+            <?php endforeach; ?>
+
+        </div>
+    </div>
+
+
     <div class="d-flex justify-content-center mt-6">
-        <button type="submit" name="save" class="btn btn-primary">Save Job</button>
+        <button type="submit" name="save" class="btn btn-lg btn-primary">Save Job</button>
     </div>
 
 </form>
+
+<?php 
+    $custom_footer_script = '<script src="'.href("assets/fileinput/js/plugins/sortable.min.js", false).'"></script>';
+    $custom_footer_script .= '<script src="'.href("assets/fileinput/js/fileinput.min.js", false).'"></script>'; 
+?>
 
 <script>
     const url = "<?=URL?>";
@@ -226,7 +283,26 @@
             escapeMarkup: function (markup) { return markup; }
         });
 
-        $('#receiving_date').flatpickr({altInput:!0,altFormat:"d F, Y",dateFormat:"Y-m-d"})
+        $('#receiving_date').flatpickr({altInput:!0,altFormat:"d F, Y",dateFormat:"Y-m-d"});
+        
+        $("#file-pictures").fileinput({
+            initialPreview: [<?php foreach($pictures as $p) { echo '"'.href('assets/media/uploads/pictures/'.$p, false).'", '; } ?>],
+            initialPreviewAsData: true,
+            
+            initialPreviewConfig: [<?php foreach($pictures as $p) { echo '{ key: "'.$p.'" }, '; } ?>],
+
+            deleteUrl: url+'/api/pictures/delete_edit.php',
+            overwriteInitial: false,
+            browseOnZoneClick: true,
+            previewClass: "bg-light",
+            allowedFileExtensions: ["jpg", "png", "jpeg"],
+            encodeUrl:true
+        });
+
+        $('#file-pictures').on('filedeleted', function(event, key, jqXHR, data) {
+            $('input[type="hidden"][value="'+key+'"]').remove();
+        });
+
     });
 
 </script>
